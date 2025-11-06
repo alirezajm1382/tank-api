@@ -31,7 +31,7 @@ const loadTanks = () => {
 let TANKS = loadTanks();
 
 // ➤ NEW: Serve the demo UI at /demo
-app.get("/demo", (req, res) => {
+app.post("/demo", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "demo.html"));
 });
 
