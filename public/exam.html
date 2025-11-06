@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>دموی امتحان عملی CSS: کامپوننت‌های تعاملی</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Vazirmatn", sans-serif;
+        background-color: #0d1117; /* پس‌زمینه اصلی تیره */
+        color: #c9d1d9; /* متن اصلی خاکستری روشن */
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        /* عنوان با گرادیان شیک */
+        background: linear-gradient(90deg, #58a6ff, #bc8cff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 40px;
+        font-weight: 700;
+        font-size: 2.5rem;
+      }
+
+      .exercise {
+        background-color: #161b22; /* پس‌زمینه کانتینرها */
+        border: 1px solid #30363d; /* حاشیه نامحسوس */
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); /* سایه تیره و عمیق */
+      }
+
+      h2 {
+        color: #58a6ff; /* عنوان‌ها با رنگ آبی متمایز */
+        margin-bottom: 20px;
+        border-bottom: 2px solid #30363d;
+        padding-bottom: 10px;
+      }
+
+      .hint {
+        background-color: #1e3a5f; /* پس‌زمینه آبی تیره برای راهنمایی */
+        border-right: 4px solid #3d5a80; /* خط کناری آبی روشن‌تر */
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 5px;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .hint i {
+        color: #98c1d9; /* رنگ آیکون راهنمایی */
+        font-size: 20px;
+      }
+
+      .hint code {
+        background-color: #0d1117;
+        color: #79c0ff;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      /* -------------------- تمرین ۱: گالری تصاویر با افکت زوم (۶ نمره) -------------------- */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .gallery-item {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 3px solid #30363d; /* حاشیه تیره */
+        cursor: pointer;
+      }
+
+      .gallery-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s ease-in-out;
+      }
+
+      .gallery-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(88, 166, 255, 0.7); /* لایه رویی با رنگ آکی */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.4s ease-in-out;
+      }
+
+      .gallery-overlay i {
+        font-size: 40px;
+        color: #0d1117; /* آیکون تیره روی لایه روشن */
+      }
+
+      .gallery-item:hover .gallery-img {
+        transform: scale(1.2);
+      }
+
+      .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+      }
+
+      /* -------------------- تمرین ۲: تولتیپ (Tooltip) متحرک (۷ نمره) -------------------- */
+      .tooltip-wrapper {
+        display: inline-block;
+        position: relative;
+        margin: 40px;
+        font-size: 18px;
+      }
+
+      .tooltip-link {
+        color: #f783ac; /* رنگ لینک خاص برای تمایز */
+        text-decoration: none;
+        font-weight: bold;
+        cursor: help;
+      }
+
+      .tooltip-link::after {
+        content: "این یک متن راهنما برای لینک است!";
+        position: absolute;
+        bottom: 125%;
+        right: 50%;
+        transform: translateX(50%) translateY(10px);
+        background-color: #21262d; /* پس‌زمینه تولتیپ */
+        color: #c9d1d9;
+        padding: 8px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        font-size: 14px;
+        font-weight: normal;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      }
+
+      .tooltip-link::before {
+        content: "";
+        position: absolute;
+        bottom: 115%;
+        right: 50%;
+        transform: translateX(50%);
+        border: 6px solid transparent;
+        border-top-color: #21262d; /* رنگ مثلث تولتیپ */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s;
+      }
+
+      .tooltip-wrapper:hover .tooltip-link::after,
+      .tooltip-wrapper:hover .tooltip-link::before {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .tooltip-wrapper:hover .tooltip-link::after {
+        transform: translateX(50%) translateY(0);
+      }
+
+      /* -------------------- تمرین ۳: کارت اطلاعات متحرک (۷ نمره) -------------------- */
+      .info-card {
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        background-color: #21262d;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .info-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(88, 166, 255, 0.2); /* سایه با رنگ آکی */
+      }
+
+      .card-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #bc8cff; /* عنوان کارت با رنگ بنفش */
+        margin-bottom: 10px;
+      }
+
+      .card-content {
+        color: #8b949e; /* متن محتوا با خاکستری کدرتر */
+        font-size: 16px;
+        opacity: 0;
+        transition: opacity 0.4s ease 0.1s;
+      }
+
+      .info-card:hover .card-content {
+        opacity: 1;
+      }
+
+      /* -------------------- بخش نمره تشویقی: اسپینر -------------------- */
+      .bonus-section {
+        text-align: center;
+        margin-top: 40px;
+      }
+      .bonus-section h2 {
+        color: #3fb950; /* عنوان نمره اضافه با رنگ سبز */
+        border-bottom-color: #3fb950;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        margin-top: 20px;
+        border: 6px solid rgba(63, 185, 80, 0.3);
+        border-radius: 50%;
+        border-top-color: #3fb950;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* استایل برای پیام هشدار */
+      #warning-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(220, 53, 69, 0.9);
+        color: white;
+        padding: 20px 30px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        z-index: 10000;
+        display: none; /* در حالت عادی مخفی است */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- پیام هشدار برای نمایش به کاربر -->
+    <div id="warning-message">
+      برای حفظ integrities امتحان، این قابلیت غیرفعال است.
+    </div>
+
+    <div class="container">
+      <h1>دموی امتحان عملی CSS: کامپوننت‌های تعاملی</h1>
+
+      <!-- تمرین ۱ -->
+      <section class="exercise">
+        <h2>🧩 تمرین ۱ — گالری تصاویر با افکت زوم (۶ نمره)</h2>
+        <p>ماوس را روی تصاویر ببرید.</p>
+
+        <div class="hint">
+          <i class="fas fa-lightbulb"></i>
+          <div>
+            <strong>راهنمایی:</strong> برای بزرگ شدن تصویر، از خاصیت
+            <code>transform</code> فکر کنید. برای ظاهر شدن لایه رویی، باید
+            <code>opacity</code> آن را تغییر دهید. به نحوه قرارگیری لایه رویی
+            روی تصویر هم توجه کنید (<code>position</code> و
+            <code>overflow</code>).
+          </div>
+        </div>
+
+        <br />
+        <div class="gallery">
+          <div class="gallery-item">
+            <img
+              src="https://picsum.photos/seed/gallery1/300/200.jpg"
+              alt="تصویر گالری ۱"
+              class="gallery-img"
+            />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img
+              src="https://picsum.photos/seed/gallery2/300/200.jpg"
+              alt="تصویر گالری ۲"
+              class="gallery-img"
+            />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img
+              src="https://picsum.photos/seed/gallery3/300/200.jpg"
+              alt="تصویر گالری ۳"
+              class="gallery-img"
+            />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- تمرین ۲ -->
+      <section class="exercise">
+        <h2>🧩 تمرین ۲ — تولتیپ (Tooltip) متحرک (۷ نمره)</h2>
+        <p>ماوس را روی متن صورتی رنگ ببرید تا تولتیپ را ببینید.</p>
+
+        <div class="hint">
+          <i class="fas fa-lightbulb"></i>
+          <div>
+            <strong>راهنمایی:</strong> برای ساخت کادر راهنما و مثلث زیر آن، از
+            pseudo-element ها (<code>::after</code> و <code>::before</code>)
+            استفاده کنید. انیمیشن ظاهر شدن از ترکیب دو افکت است: یکی برای نمایش
+            (<code>opacity</code>) و دیگری برای حرکت (<code>transform</code>).
+          </div>
+        </div>
+
+        <br />
+        <div class="tooltip-wrapper">
+          <a href="#" class="tooltip-link">اینجا ماوس ببرید</a>
+        </div>
+      </section>
+
+      <!-- تمرین ۳ -->
+      <section class="exercise">
+        <h2>🧩 تمرین ۳ — کارت اطلاعات متحرک (۷ نمره)</h2>
+        <p>ماوس را روی کارت زیر ببرید تا اطلاعات آن ظاهر شود.</p>
+
+        <div class="hint">
+          <i class="fas fa-lightbulb"></i>
+          <div>
+            <strong>راهنمایی:</strong> برای مخفی و آشکار کردن محتوا، از خاصیت
+            <code>opacity</code> استفاده کنید. برای ایجاد حس ظاهر شدن، می‌توانید
+            همزمان از <code>transform</code> برای کمی بالا بردن کل کارت استفاده
+            کنید تا افکت جذاب‌تری داشته باشید.
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="card-title">کارت شماره ۱</div>
+          <div class="card-content">
+            <p>
+              این محتوای کارت است که با قرار گرفتن ماوس روی کارت، به صورت نرم و
+              تدریجی ظاهر می‌شود. این روش برای نمایش اطلاعات اضافی بسیار کاربردی
+              است.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- نمره اضافه -->
+      <section class="bonus-section">
+        <h2>✨ نمره اضافه (۲ نمره تشویقی)</h2>
+        <p>اسپینر بارگذاری ساخته شده با @keyframes:</p>
+
+        <div
+          class="hint"
+          style="display: inline-block; text-align: right; max-width: 500px"
+        >
+          <i class="fas fa-lightbulb"></i>
+          <div>
+            <strong>راهنمایی:</strong> برای انیمیشن‌های تکرارشونده و پیچیده‌تر
+            از <code>transition</code>، باید از <code>@keyframes</code> برای
+            تعریف فریم‌های انیمیشن و سپس از خاصیت <code>animation</code> برای
+            اعمال آن استفاده کنید.
+          </div>
+        </div>
+
+        <div class="spinner"></div>
+      </section>
+    </div>
+
+    <script>
+      // تابعی برای نمایش پیام هشدار
+      function showWarning() {
+        const warningBox = document.getElementById("warning-message");
+        warningBox.style.display = "block";
+        // بعد از 2.5 ثانیه پیام را مخفی کن
+        setTimeout(() => {
+          warningBox.style.display = "none";
+        }, 2500);
+      }
+
+      // غیرفعال کردن راست کلیک
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault(); // جلوگیری از نمایش منوی راست کلیک
+        showWarning(); // نمایش پیام هشدار
+      });
+
+      // غیرفعال کردن کلیدهای میانبر برای باز کردن Developer Tools
+      document.addEventListener("keydown", function (e) {
+        // کلید F12
+        if (e.keyCode === 123) {
+          e.preventDefault();
+          showWarning();
+        }
+        // Ctrl+Shift+I
+        if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+          e.preventDefault();
+          showWarning();
+        }
+        // Ctrl+Shift+J
+        if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+          e.preventDefault();
+          showWarning();
+        }
+        // Ctrl+U (مشاهده سورس صفحه)
+        if (e.ctrlKey && e.keyCode === 85) {
+          e.preventDefault();
+          showWarning();
+        }
+      });
+    </script>
+  </body>
+</html>

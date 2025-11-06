@@ -35,6 +35,10 @@ app.get("/demo", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "demo.html"));
 });
 
+app.get('/exam', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'exam.html'))
+})
+
 // Home route
 app.get("/", (req, res) => {
   res.json({
@@ -43,6 +47,7 @@ app.get("/", (req, res) => {
       "GET /tanks": "Returns all tanks",
       "GET /tanks?search=<term>": "Search tanks by name, country, or era",
       "GET /demo": "View interactive tank browser UI",
+      "GET /exam": "View exam demo for advanced students",
     },
   });
 });
